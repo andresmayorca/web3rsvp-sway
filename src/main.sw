@@ -9,6 +9,7 @@ use std::{
     storage::StorageMap,
     chain::auth::{AuthError, msg_sender},
     context::{call_frames::msg_asset_id, msg_amount, this_balance},
+    result::Result,
 };
 
 storage {
@@ -18,7 +19,7 @@ storage {
 
 impl eventPlatform for Contract{
     #[storage(read, write)]
-    fn createEvent(capacity: u64, price: u64, owner: Identity, eventName: str[10]){
+    fn create_event(capacity: u64, price: u64, owner: Identity, eventName: str[10]) -> bool {
        let newEvent = Event {
         maxCapacity: capacity,
         deposit: price,
@@ -31,15 +32,16 @@ impl eventPlatform for Contract{
 
        storage.events.insert(campaign_id, newEvent);
        storage.event_id_counter += 1;
-          return true;
+       return true;
     }
 
     #[storage(read, write)]
-    fn rsvp(eventId: u64) -> bool {
-    //CreateEvent storage myEvent = idToEvent[eventId];
-    let selectedEvent = storage.events.get(eventId);
+    fn rsvp(eventId: u64) -> Event {
+    //variables are immutable by default, so you need to use the mut keyword
+    let mut selectedEvent = storage.events.get(eventId);
     //send the money from the msg_sender to the owner of the selected event
     selectedEvent.numOfRSVPs += 1;
-    return true;
+    storage.events.insert(eventId, selectedEvent);
+    return selectedEvent;
     }
 }
