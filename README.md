@@ -33,11 +33,6 @@
     forc 0.18.1
     ```
 
-    *if that doesn't work*
-
-    ![open system preferences](images/system_preferences.png)
-    ![click allow](images/allow_forc.png)
-
 ### Editor
 
 You are welcome to use your editor of choice.
